@@ -1,4 +1,4 @@
-## P8: Hand-Controlled Media Player Using OpenCV and MediaPipe
+## Hand-Controlled Media Player Using OpenCV and MediaPipe
 
 This project uses Python, OpenCV, MediaPipe, and PyAutoGUI to create an interactive, hand-controlled media player. By leveraging computer vision and hand tracking, the system enables users to control media playback (e.g., play, pause, adjust volume) using simple hand gestures in real-time.
 
