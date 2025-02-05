@@ -30,5 +30,3 @@ The media player operates by capturing live webcam input, tracking hand gestures
 
 ## ✨ Let’s Collaborate!
 I’m always looking for ways to improve my projects and learn from the tech community. If you have suggestions for enhancing the functionality of this hand-controlled media player, or ideas for creative use cases, let’s connect! Feel free to share your thoughts and feedback in the comments below—I’d love to explore new possibilities together! 😊
-
-[![P8: Hand-Controlled Media Player Using OpenCV and MediaPipe](https://img.youtube.com/vi/DfNcyvFHG90/0.jpg)](https://youtu.be/DfNcyvFHG90)
