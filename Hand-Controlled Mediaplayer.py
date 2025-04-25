@@ -4,6 +4,9 @@
 import cv2  # For video capturing and image processing
 import mediapipe as mp  # For hand tracking and landmark detection
 import pyautogui  # For simulating keyboard inputs to control media playback
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
 
 # Initialize MediaPipe drawing utilities and hand solutions
 mp_drawing = mp.solutions.drawing_utils  # For drawing landmarks and connections on the image
@@ -18,6 +21,10 @@ Gesture = None  # Placeholder for gesture recognition (not used in this code)
 
 # Set camera resolution
 wCam, hCam = 720, 640
+
+devices = AudioUtilities.GetSpeakers()
+interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+volume = cast(interface, POINTER(IAudioEndpointVolume))
 
 # Function to extract the positions of hand landmarks
 def fingerPosition(image, handNo=0):
@@ -42,7 +49,7 @@ def fingerPosition(image, handNo=0):
     return lmList
 
 # Start webcam capture and set resolution
-cap = cv2.VideoCapture(1)  # Use camera index 1 (change if needed)
+cap = cv2.VideoCapture(0)  # Use camera index 1 (change if needed)
 cap.set(3, wCam)  # Set width of the webcam feed
 cap.set(4, hCam)  # Set height of the webcam feed
 
@@ -100,13 +107,20 @@ with mp_hands.Hands(
                 if lmList[8][1] > 400:  # Finger points right
                     print("Right")
                     pyautogui.press('right')  # Simulate right arrow key
-            if totalFingers == 2:  # Two fingers up
-                if lmList[9][2] < 210:  # Fingers point up
-                    print("Up")
-                    pyautogui.press('up')  # Simulate up arrow key
-                if lmList[9][2] > 230:  # Fingers point down
-                    print("Down")
-                    pyautogui.press('down')  # Simulate down arrow key
+            if totalFingers == 2:
+    if lmList[9][2] < 210:  # Fingers pointing UP
+        print("Volume Up")
+        # Get current volume
+        currentVolume = volume.GetMasterVolumeLevelScalar()
+        # Increase volume slightly (+0.05)
+        newVolume = min(currentVolume + 0.05, 1.0)  # Max = 1.0
+        volume.SetMasterVolumeLevelScalar(newVolume, None)
+
+    if lmList[9][2] > 230:  # Fingers pointing DOWN
+        print("Volume Down")
+        currentVolume = volume.GetMasterVolumeLevelScalar()
+        newVolume = max(currentVolume - 0.05, 0.0)  # Min = 0.0
+        volume.SetMasterVolumeLevelScalar(newVolume, None)
 
         # Display the webcam feed with annotations
         cv2.imshow("Media Controller", image)
